@@ -1,0 +1,215 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>How to install apps (zh-CN) by Winter</title>
+<link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/metro.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/icons.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/img-domain.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/Fonts/fonts.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/metrodark.css">
+<style>
+	body
+	{
+		margin: 24px;
+		background-color: transparent;
+	}
+</style>
+</head>
+
+<body>
+	<div id="article-toturial" style="background-color: rgba(0,0,0,0.22)">
+	<h1>如何安装商店应用的安装包</h1>
+	<br><a class="navigation-text" href="https://1drv.ms/p/c/a78577d37db0fa4c/EaNe_mLSl8RMjCKrGbLQnqEBpuiAj-t0KNiIcNrP3P8BdQ?e=XpglPU" target="_blank" style="font-family: 'MS Office Symbol Semilight', 'Microsoft YaHei UI', 'Microsoft YaHei Light', 'Microsoft YaHei', 'Segoe UI'; ">󰒱 看 PowerPoint 版教程</a><br><br>
+		<div id="article-contents">
+			<h2>目录</h2>
+			<blockquote>
+				<ul class="unstyled">
+                    <li>
+                        <a class="navigation-text" href="#article-part-developer_mode">启用开发人员模式</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-developer_mode-win10">Windows 10</a></li>
+                            <li><a class="navigation-text" href="#article-part-developer_mode-win8">Windows 8.x</a></li>
+                            <li><a class="navigation-text" href="#article-part-developer_mode-lob">旁加载业务线（LOB）模式</a></li>
+                            <li><a class="navigation-text" href="#article-part-developer_mode-no_sppsvc">绕过 sppsvc 启用旁加载业务线（LOB）模式</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="navigation-text" href="#article-part-insapp">安装应用</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-insapp-pwsl">使用 PowerShell 安装应用</a></li>
+                            <li><a class="navigation-text" href="#article-part-insapp-winapi">使用 WinAPI 安装应用</a></li>
+                            <li><a class="navigation-text" href="#article-part-insapp-tools">使用软件安装应用</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="navigation-text" href="#article-part-loadsign">导入证书</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-loadsign-sign">商店应用包签名与证书</a></li>
+                            <li><a class="navigation-text" href="#article-part-loadsign-load">导入证书</a></li>
+                            <li><a class="navigation-text" href="#article-part-loadsign-cer">导入 CER 文件</a></li>
+                            <li><a class="navigation-text" href="#article-part-loadsign-pfx">导入 PFX 文件</a></li>
+                            <li><a class="navigation-text" href="#article-part-loadsign-fromfile">导入应用商店包自带的证书</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="navigation-text" href="#article-part-applic">商店应用许可证</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-applic-licfile">LIC 许可证</a></li>
+                            <li><a class="navigation-text" href="#article-part-applic-tools">使用软件导入、破解、导出、删除许可证</a></li>
+                        </ul>
+                    </li>
+					<li><a class="navigation-text" href="#article-part-urls">参考链接</a></li>
+				</ul>
+			</blockquote>
+			<br>
+		</div>
+		<div id="article-text">
+			<h2 id="article-part-developer_mode">启用开发人员模式</h2>
+			<h3 id="article-part-developer_mode-win10">Windows 10</h3>
+			<p style="font-family: 'Segoe MDL2 Assets', 'Microsoft YaHei UI', 'Microsoft YaHei Light', 'Microsoft YaHei', 'Segoe UI';">在 Windows 10 中启用开发者选项非常简单，直接从“ 设置”→“ 更新和安全”→“ 开发者选项”启用“从任意源(包括松散文件)安装应用”。<br>注意：各个版本的 Windows 10 虽然设置界面不一样，但是方法都是差不多的的。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-1-1.png" style="width: 60%;"></div><br>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-1-2.png" style="width: 60%;"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+	
+			<h3 id="article-part-developer_mode-win8">Windows 8.x</h3>
+			<p>但是，在 Windows 10 能办到的事却在 Windows 8/8.1 （包括一部分 Windows Technical Preview）上却麻烦了。现在是 2024 年，Windows 8.1 的应用商店早就从去年年初就停用了，而且能授权 Windows 8.1 的开发人员许可证的服务器也在去年关停了。</p>
+			<p>那么就没有方法了吗？</p>
+			<p>当然有了。</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-developer_mode-lob">旁加载业务线（LOB）模式</h3>
+			<p>以下来自 MSDN：<br>　　旁加载应用是在安装非官方源（如 Microsoft Store）的应用时。 组织可以创建自己的应用，包括业务线 (LOB) 应用。 当你旁加载应用时，你将一个已签名的应用包部署到设备。 你维护这些应用的签名、承载和部署。<br>　　若要允许这些应用在 Windows 设备上运行，可能需要启用旁加载。</p>
+			<p>这个方法适用于 Windows 8 及以上版本。<br>注意：启用 LOB 模式需要购买特定的产品密钥，但对于 Windows 8.x 的产品密钥早就停售了。</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+	
+			<h3 id="article-part-developer_mode-no_sppsvc">绕过 sppsvc 启用旁加载业务线（LOB）模式</h3>
+			<p>由于启用 LOB 得注册项一直被 sppsvc 服务保护着，我们若想修改，必须要绕过 sppsvc<br>以下的操作需要使用 Product Policy Editor<br>感谢 B 站 UP 主“Li-zip”提供的方法，视频：<a class="navigation-text" href="https://www.bilibili.com/video/BV1XS421w7uX" target="_blank">https://www.bilibili.com/video/BV1XS421w7uX</a><br>我们先设置安装模式为 1（如图），然后进行重启。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-4-1.png" style="width: 300px;"></div><br>
+			<p>重启后就进入系统部署模式，系统会自动启动 Product Policy Editor，然后接着做以下两个操作：</p>
+			<ul>
+				<li>禁用 sppsvc（Disable sppsvc）</li>
+				<li>设置“WSLicensingService”打头，有“LOB”文本的项（往最后翻，用↓键或 PAGEDOWN 键），如果为0，设置为 1。</li>
+			</ul>
+			<p>这两个步骤不分前后，必须在同一环境完成。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-4-2.png"></div><br>
+			<p>如果无法看到鼠标指针且能用键盘，可以用键盘的 Tab 键切换组件，用↑↓键，PAGEUP 或 PAGEDOWN 键切换项，用 Enter 键进行点击操作。<br>如果用触屏设备，无法使用键盘，可以复制其他项得值，然后再粘贴编辑。</p>
+			<p>进行完之前的步骤后，我们保存我们的修改。点击“Modify registry”保存修改，然后关闭窗口（用 ESC 或“Close”按钮），关闭命令提示符窗口（如果有）（输入“exit”后按 Enter 键或者点击窗口上的关闭按钮）。系统将自动重启</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-4-3.png"></div><br>
+			<p>重启后，我们就启用 LOB 了。当然，要想确保 Metro 应用安装包能成功安装，仍然要确保以下的能启用。（组策略，gpedit.msc：计算机配置→管理模板→应用程序包部署）（如果有就启用）</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-4-3-1.png"></div><br>
+			<p>注意：关闭 sppsvc 服务会影响 Microsoft 产品的激活状态，尤其像 Microsoft Office 会无法正常使用。恢复激活状态也很简单：重新用 Product Policy Editor 启用 sppsvc（Enable sppsvc），方法与禁用 sppsvc 一样。<br>设置安装模式为 1，重启后选择 Enable sppsvc，然后重启即可。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/devmode-4-4.png"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+			
+			<h2 id="article-part-insapp">安装应用</h2>
+			<p>注意：请在安装之前确认已经启用开发人员模式或进入 LOB 模式。否则无法正常安装应用或者安装后出现以下情况。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-0-1.png" style="width: 80%;"></div><br>
+			<h3 id="article-part-insapp-pwsl">使用 PowerShell 安装应用</h3>
+			<p>主要用命令：</p>
+			<ul>
+				<li>Add-AppxPackage</li>
+				<li>Add-AppxProvisionedPackage</li>
+			</ul>
+			<p>接下来是举例，更详细的方法请查网络。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-1-1.png"><p class="text-code-font">Add-AppxPackage &lt;Package_File_Path&gt;<br>安装商店应用包</p></div><br>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-1-2.png"><p class="text-code-font">Add-AppxProvisionedPackage –Online –PackagePath &lt;Package_File_Path&gt; [-SkipLicense]<br>在线添加商店应用（并跳过检查许可证）（这里的在线指的是在正在使用的 Windows）</p></div><br>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-1-2.png">><p class="text-code-font">Add-AppxPackage –Register &lt;AppxManifest.xml_File_Path&gt;<br>注册商店应用（注册的是 AppxManifest.xml 文件）。这里由于没有开启旁侧载或开发人员模式导致安装失败</p></div><br>
+			<p>使用 PowerShell 注意：</p>
+			<ul>
+				<li>请在管理员模式下运行</li>
+				<li>Add-AppxPackage 在 Windows 8 中无法直接安装商店应用包（这个需要调用 WinAPI 才能安装），只能用 Add-AppxPackage –Register 注册商店应用。（我没记错的话）</li>
+				<li>这里只是举例，更详细的方法请上网搜寻</li>
+			</ul>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-insapp-winapi">使用 WinAPI 安装应用</h3>
+			<p>这个部分就需要懂些编程了。这里建议使用 Visual Studio 2012 及以上版本。<br>相关例程请到 Github 找“Windows-classic-samples-main”项目中的 Samples→PackageManagerAddPackage。有 C++ 和 C# 两个版本。<br>Github 项目链接：<a class="navigation-text" href="https://github.com/microsoft/Windows-classic-samples/tree/main" target="_blank">https://github.com/microsoft/Windows-classic-samples/tree/main</a></p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-insapp-tools">使用软件安装应用</h3>
+			<h4 id="article-part-insapp-tools-winappb">Windows App Boss</h4>
+			<p>这里强烈建议用 Windows App Boss（保证你能看得懂英文界面），这里列举最简单的方法</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-3-1.png"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h4 id="article-part-insapp-tools-gxap">Gxap 的 Appx 实用 UWP应用安装器</h4>
+			<p>推荐 B 站 UP 主“Gxap”编写的程序：全新appx实用UWP应用安装器<br>视频：<a class="navigation-text" href="https://www.bilibili.com/video/av655097402/" target="_blank">https://www.bilibili.com/video/av655097402/</a><br>下载链接：<a class="navigation-text" href="https://zjh365-my.sharepoint.com/:u:/g/personal/hello_zjh365_onmicrosoft_com/EceNvnXji8ZLsB8ieZk19sMBlx10S6HqAaNctH7SdIv-ag?e=Ddebel" target="_blank">https://zjh365-my.sharepoint.com/:u:/g/personal/hello_zjh365_onmicrosoft_com/EceNvnXji8ZLsB8ieZk19sMBlx10S6HqAaNctH7SdIv-ag?e=Ddebel</a></p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-3-2.png" style="width: 60%;"><p>软件截图</p></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h4 id="article-part-insapp-tools-winter">自己写的的 应用安装程序</h4>
+			<p>自己写了一个 应用安装程序，用于 32/64 位平台（不包括 ARM）。安装前，必须要安装 VC++ 2013 运行库<br>视频：<a class="navigation-text" href="https://www.bilibili.com/video/BV15AYceiEm6/" target="_blank">https://www.bilibili.com/video/BV15AYceiEm6/</a><br>下载链接：<a class="navigation-text" href="https://pan.baidu.com/s/1dyhGdvQj1-sooRKTJ0bvdw?pwd=k3xc" target="_blank">https://pan.baidu.com/s/1dyhGdvQj1-sooRKTJ0bvdw?pwd=k3xc 提取码：k3xc</a>，文件夹中“1.3”及以上的版本，文件名为“InstallerSetup.exe”</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/insapp-3-3.png" style="width: 60%;"><p>软件截图</p></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-insapp-others">其他方法</h3>
+			<p>注意：这里不列举全了。其实还有用 Dism 安装方法，这个自己上网搜了。</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h2 id="article-part-loadsign">导入证书</h2>
+			<h3 id="article-part-loadsign-sign">商店应用包签名与证书</h3>
+			<p>商店应用包一般都有签名（如果没有签名可能无法安装），右键后可以看到<br>从 Microsoft Store 直链获取的安装包是可以直接安装，并不需要导入证书。但是，一些重新打包，或没有发布到 Microsoft Store 的安装包，或者破解的包等，是需要导入证书，否则无法安装。当然，相同的证书只需导入一次即可。</p>
+			<div class="domain-img-center" style="-ms-flex-direction: row; flex-direction: row;"><img class="domain-img domain-img-center" src="Images/sign-1-1.png" style="width: 30%;"><img class="domain-img domain-img-center" src="Images/sign-1-2.png" style="width: 30%;"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-loadsign-load">导入证书</h3>
+			<p>在导入证书的向导中，我们通常选择本地计算机，然后把证书保存到“受信任的根证书颁发机构”位置。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-2-1.png"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-loadsign-cer">导入 CER 文件</h3>
+			<p>直接打开 CER 文件</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-3-1.png"></div><br>
+			<p>之后的步骤与导入证书的步骤一致</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-loadsign-pfx">导入 PFX 文件</h3>
+			<p>直接打开 PFX 文件，部分步骤不同</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-4-1.png"></div><br>
+			<p>之后的步骤与导入证书的步骤相差不大</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-loadsign-fromfile">导入应用商店包自带的证书</h3>
+			<p>有时候无法用外部的证书文件安装，那么直接从应用商店包右键找到“属性”→“数字签名”导入证书即可</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-5-1.png"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+			<p>注意：如果导入证书后程序仍然无法安装，那么要考虑证书是否过期了。有必要的话需要对应用商店包进行重签名</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h2 id="article-part-applic">商店应用许可证</h2>
+			<h3 id="article-part-applic-licfile">Lic 许可证</h3>
+			<p>Lic 许可证与应用包签名不一样。Lic 许可证的作用主要用来例如一个应用是否可用，或者一个应用是试用版还是已经完成购买。通过用特殊程序可以提取出文件。（LIC 文件，实质为 XML 文件）。</p>
+			<p>Lic 文件从 tokens.dat 提取，但不是 spp 那个 tokens.dat</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-applic-tools">使用软件导入、破解、导出、删除许可证</h3>
+			<p>我们在使用工具前，先要破解商店服务。<br>使用 WSService Crack 破解应用商店服务。<br>选择适合自己系统的版本，并根据自己系统的处理器架构选择相应的程序（红框中的）</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/lic-2-1.png"></div><br>
+			<p>接着我们可以用相关工具了。这里推荐用“Win8.1 Apps应用部署 2.6.1.0”或“Tokens Extractor”（ WSService Crack 附带）</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/lic-2-2.png"></div><br>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/lic-2-3.png"></div><br>
+			<p>注意：此部分的所有方法仅限 Windows 8.x，由于 Windows 10 的商店应用许可证储存方式与 Windows 8.x 的不一样，所以这些方法放在 Windows 10 中全部无效！</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h2 id="article-part-urls">参考链接</h2>
+			<p>在2024年为Windows8.x系列成功侧载第三方metro应用 复活你的Surface RT! – 哔哩哔哩<br>链接：<a class="navigation-text" href="https://www.bilibili.com/video/av1501502082/" target="_blank">https://www.bilibili.com/video/av1501502082/</a></p>
+			<p>为Windows 8 build 8102附近Build移植metro应用！ - 哔哩哔哩<br>链接：<a class="navigation-text" href="https://www.bilibili.com/video/av1453462507/" target="_blank">https://www.bilibili.com/video/av1453462507/</a></p>
+			<p>Wsservice-crk完美越狱应用商店程序免费使用教程 – 道客巴巴<br>链接：<a class="navigation-text" href="https://www.doc88.com/p-9572005515791.html" target="_blank">https://www.doc88.com/p-9572005515791.html</a></p>
+			<p>Windows10 安装APPX程序 PowerShell方式 – 博客园<br>链接：<a class="navigation-text" href="https://www.cnblogs.com/ayers/p/15390951.html" target="_blank">https://www.cnblogs.com/ayers/p/15390951.html</a></p>
+			<p>这里的链接没列举全，还是自己要上网搜</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+			<p style="float: right;">2024.08.18</p>
+		</div>
+		<!--<div>
+			<h2>结语</h2>
+			<p>这些仅是我收集和经验一起整合得到的教程，有不准确不全面之处，请大家谅解。欢迎大家一起修正和完善这个教程。</p>
+			<br>
+		</div>
+		<div>
+			<h2>再见<br>ヾ(￣▽￣)Bye~Bye~</h2>
+			<br>
+		</div>-->
+	</div>
+</body>
+</html>

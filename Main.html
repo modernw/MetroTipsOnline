@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Metro Tips</title>
+	<link rel="shortcut icon" href="./Images/DEFAULT_ICON.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="Libs/WinJS/2.0/css/ui-dark.css">
+	<link rel="stylesheet" type="text/css" href="Libs/styles.css">
+	<link rel="stylesheet" type="text/css" href="Libs/Fonts/fonts.css">
+	<script src="Libs/WinJS/2.0/js/base.js"></script>
+	<script src="Libs/WinJS/2.0/js/ui.js"></script>
+	<script src="articles/items.js"></script>
+	<script src="Libs/codes.js"></script>
+	<script src="Libs/loading.js"></script>
+</head>
+<body>
+	
+	<div id="background" style="background-image: url('Images/black.jpg'); margin: 0px;" class="div-disable-copy_paste"></div>
+	<div class="container">
+		<div class="nav div-disable-copy_paste" id="nav">
+			<h1 id="guildTitle" style="margin: 24pt 24pt 16pt calc(64pt + 10px); font-size: 48px; font-family: 'Microsoft YaHei Light', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Segoe UI'; font-weight: lighter; animation: slideIn 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;" class="win-title">Metro Tips</h1>
+			<div id="listView" class="win-listview win-surface"></div>
+		</div>
+		<div class="content" id="content">
+			<button id="backButton" class="win-backbutton div-disable-copy_paste" data-win-control="WinJS.UI.BackButton" style="display: block; margin: 40px 24px 24px;"></button>
+			<iframe id="contentFrame" allowfullscreen></iframe>
+		</div>
+	</div>
+	<div id="loading" style="background-color: rgba(0,0,0,0.58); position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; visibility: hidden; z-index: 5; pointer-events: none; transition: opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1); opacity: 0;" class="div-disable-copy_paste div-center-style" >
+		<span id="loading-title" class="style_text style_text_color style_text_color_shadow" style="font-size:16.0pt;">
+			<span id="sequential-char-container" style="font-family:'Setup';"></span>
+			<span id="title" style="font-family:'Microsoft YaHei','Segoe UI'; font-size:16.0pt;">
+			 	请稍候...
+			</span>
+		</span
+	></div>
+	<audio id="start-play" controls height="0" width="0" style="display: none;" class="div-disable-copy_paste">
+		<source src="Audios/start.wav" type="audio/mpeg">
+		<embed height="0" width="0" src="Audios/start.wav">
+	</audio>
+
+	
+	<script>
+		
+	</script>
+</body>
+</html>
