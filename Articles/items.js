@@ -21,25 +21,28 @@ var data = [
 	},
 ];
 
-var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-var basePath = isLocal ? '' : 'https://wintersamu.github.io/MetroTipsOnline/';
-
 function loadItems() {  
-	var listView = document.getElementById("listView");  
-	listView.innerHTML = ''; 
-	for (var i = 0; i < data.length; i++) {  
-		var item = data[i];  
-		var listItem = document.createElement("div");  
+	const listView = document.getElementById("listView");  
+	listView.innerHTML = ''; // 清空现有内容以避免重复  
+  
+	// 使用 for 循环代替 forEach  
+	for (let i = 0; i < data.length; i++) {  
+		const item = data[i];  
+		const listItem = document.createElement("div");  
 		listItem.className = "listView-item win-item";  
 		//listItem.style.backgroundImage = `url(${item.background})`;  
-		listItem.style.backgroundImage = 'url(' + (isLocal ? item.background : (basePath + item.background)) + ')';
-		var title = document.createElement("div");  
+		listItem.style.backgroundImage = 'url(' + item.background + ')';
+
+		const title = document.createElement("div");  
 		title.className = "title";  
 		title.textContent = item.title;  
+  
 		listItem.appendChild(title);  
+		// 添加点击事件监听器  
 		listItem.addEventListener("click", function() {  
 			showContent(item.url, item.background);  
 		});  
+  
 		listView.appendChild(listItem);  
 	}  
 }  
