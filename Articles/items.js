@@ -7,17 +7,17 @@ const data = [
 	{
 		"title": "如何安装商店应用的安装包",
 		"url": "Articles/InstallApp/Index.html",
-		"background": "images/aurora.jpg"
+		"background": "Images/aurora.jpg"
 	},
 	{
 		"title": "如何重签名或重打包 Metro 应用",
 		"url": "Articles/MakePackage/Index.html",
-		"background": "images/sunrise.jpg"
+		"background": "Images/sunrise.jpg"
 	},
 	{
 		"title": "结语",
 		"url": "Articles/End/Index.html",
-		"background": "images/kagamine-rin-and-len.png"
+		"background": "Images/kagamine-rin-and-len.png"
 	},
 ];
 
