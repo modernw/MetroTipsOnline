@@ -44,7 +44,10 @@ function loadItems() {
 	});
 }
 */
-  
+
+var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+var basePath = isLocal ? '' : 'https://wintersamu.github.io/MetroTipsOnline/';
+
 function loadItems() {  
 	const listView = document.getElementById("listView");  
 	listView.innerHTML = ''; // 清空现有内容以避免重复  
@@ -55,7 +58,7 @@ function loadItems() {
 		const listItem = document.createElement("div");  
 		listItem.className = "listView-item win-item";  
 		//listItem.style.backgroundImage = `url(${item.background})`;  
-		listItem.style.backgroundImage = 'url(' + item.background + ')';
+		listItem.style.backgroundImage = 'url(' + (isLocal ? item.background : (basePath + item.background)) + ')';
 
 		const title = document.createElement("div");  
 		title.className = "title";  
