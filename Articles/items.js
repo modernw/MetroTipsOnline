@@ -2,7 +2,7 @@ const data = [
 	{
 		"title": "如何获取商店应用的安装包",
 		"url": "Articles/GetApp/Index.html",
-		"background": "images/win10-hero-logon.png"
+		"background": "Images/win10-hero-logon.png"
 	},
 	{
 		"title": "如何安装商店应用的安装包",
