@@ -1,0 +1,219 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>How to make or sign packages (zh-CN) by Winter</title>
+<link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/metro.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/icons.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/img-domain.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/Fonts/fonts.css">
+<link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/metrodark.css">
+<style>
+	body
+	{
+		margin: 24px;
+		background-color: transparent;
+	}
+</style>
+</head>
+
+<body>
+	<div id="article-toturial" style="background-color: rgba(0,0,0,0.22)">
+	<h1>如何重签名或重打包 Metro 应用</h1>
+	<br><a class="navigation-text" href="https://1drv.ms/p/c/a78577d37db0fa4c/EUCAb_nngwNHtK-81g7qH7UBXctxJ29Y7hHmVB_uJHDtbg?e=rcPnfn" target="_blank" style="font-family: 'MS Office Symbol Semilight', 'Microsoft YaHei UI', 'Microsoft YaHei Light', 'Microsoft YaHei', 'Segoe UI'; ">󰒱 看 PowerPoint 版教程</a><br><br>
+		<div id="article-contents">
+			<h2>目录</h2>
+			<blockquote>
+				<ul class="unstyled">
+                    <li>
+                        <a class="navigation-text" href="#article-part-1">创建签名文件</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-1-1">准备文件</a></li>
+                            <li><a class="navigation-text" href="#article-part-1-2">创建 CER 和 PVK 文件</a></li>
+                            <li><a class="navigation-text" href="#article-part-1-3">创建 PFX 文件</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="navigation-text" href="#article-part-2">包的签名</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-2-1">准备文件</a></li>
+                            <li><a class="navigation-text" href="#article-part-2-2">使用 SignTool 对包进行签名</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="navigation-text" href="#article-part-3">包的生成</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-3-1">准备文件</a></li>
+                            <li><a class="navigation-text" href="#article-part-3-2">解压应用包</a></li>
+                            <li><a class="navigation-text" href="#article-part-3-3">生成 Appx 文件</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="navigation-text" href="#article-part-4">使用工具生成并签名包</a>
+                        <ul>
+                            <li><a class="navigation-text" href="#article-part-4-1">Windows Store App Backup (WSAppBak)</a></li>
+                        </ul>
+                    </li>
+					<li><a class="navigation-text" href="#article-part-urls">参考链接</a></li>
+				</ul>
+			</blockquote>
+			<br>
+		</div>
+		<div id="article-text">
+			<h2 id="article-part-1">创建签名文件</h2>
+			<h3 id="article-part-1-1">准备文件</h3>
+			<p>以下文件来自 Windows Kits（包括 Windows 8.x 和 10），如果做 Metro/UWP 应用的相关开发会有这些工具。</p>
+			<p>makecert.exe – 签名创建工具<br>pvk2pfx.exe – 将 PVK 文件转换为 PFX 文件</p>
+			<p>除了从 Windows Kits 获取以上文件，还可以从 WSAppBak 获取。（WSAppBak 会带这些文件，用于 Appx 的打包和签名）</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+	
+			<h3 id="article-part-1-2">创建 CER 和 PVK 文件</h3>
+			<p>该教程来自 WSAppBak 的源码。这里不介绍原理，只介绍方法，具体的上网搜。<br>打开命令行，为了方便操作，我们直接 dir 到前文提到的工具所在的目录。</p>
+			<p>我们输入以下命令</p>
+			<p class="text-code-font">makecert.exe -n &lt;Identity_Publisher&gt; -r -a sha256 -len 2048 -cy end -h 0 -eku 1.3.6.1.5.5.7.3.3 -b 01/01/2000 -sv &lt;Output_PVK_File_Path&gt; &lt;Output_CER_File_Path&gt;</p>
+			<p>例如：</p>
+			<p class="text-code-font">"E:\Profiles\Bruce\Desktop\Others\wsapp\Build\MakeCert.exe" -n "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" -r -a sha256 -len 2048 -cy end -h 0 -eku 1.3.6.1.5.5.7.3.3 -b 01/01/2000 -sv "Output\Microsoft.3DBuilder_x86.pvk" "Output\Microsoft.3DBuilder_x86.cer"</p>
+			<p>如截图所示，这时候弹出一个窗口（窗口上的文本我自己用 Resource Hacker 翻译了，实际上都是英文），提示是否创建密码。这个根据自己的需求。密码不影响 CER 证书导入，影响 PFX 证书的导入。这里我们就不用密码了。（注意，不要直接关闭窗口，而是点“OK”或“None”</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makesign-2-1.png"></div><br>
+			<p>如截图所示，如果没有创建成功，则会输出错误信息。如果成功，会输出“Succeeded”</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makesign-2-2.png"></div>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makesign-2-3.png"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-1-3">创建 PFX 文件</h3>
+			<p>该教程来自 WSAppBak 的源码。这里不介绍原理，只介绍方法，具体的上网搜。<br>打开命令行，为了方便操作，我们直接 dir 到前文提到的工具所在的目录。<br>准备之前的 CER 文件和 PVK 文件（这两个文件是配套的）</p>
+			<p>输入以下命令行：</p>
+			<p class="text-code-font">pvk2pfx.exe -pvk &lt;PVK_File_Path&gt; -spc &lt;CER_File_Path&gt; -pfx &lt;Output_PFX_File_Path&gt;</p>
+			<p>例如：</p>
+			<p class="text-code-font">"E:\Profiles\Bruce\Desktop\Others\wsapp\Build\Pvk2Pfx.exe" -pvk "Output\Microsoft.3DBuilder_x86.pvk" -spc "Output\Microsoft.3DBuilder_x86.cer" -pfx "Output\Microsoft.3DBuilder_x86.pfx"</p>
+			<p>如果成功了，那么不会有什么输出</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makesign-3-1.png"></div><br>
+			<p>如果在创建 CER 文件和 PVK 文件使用密码，那么在创建 PFX 文件时仍要输入密码。（与创建 CER 文件和 PVK 文件输入的密码一样）。同样，成功是不会有什么输出</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makesign-3-2.png" style="width: 30%;"><p>这里的窗口仍然是我翻译并修改的，其实平常能获得到的资源是英文。</p></div><br>
+			<p>PFX 将用来导入签名，或者用于应用商店包的重签名。<br>CER 将用于导入证书。<br>CER 和 PVK 用于生成 PFX 文件。</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+			
+			<h2 id="article-part-2">包的签名</h2>
+			<h3 id="article-part-2-1">准备文件</h3>
+			<p>以下文件来自 Windows Kits（包括 Windows 8.x 和 10），如果做 Metro/UWP 应用的相关开发会有这些工具。</p>
+			<p>signtool.exe – 应用包签名工具。</p>
+			<p>注意，使用前请建议右击查看程序的版本，建议版本为 6.3.xxxxx.xxxxx 版本及以上，6.2.xxxxx.xxxxx 版本不支持签名 AppxBundle 包。至于 Msix/MsixBundle 包的签名，这里不做考虑。（看 Msix/MsixBundle 是从哪个系统版本出现就从哪个系统版本的 Kits 提取）</p>
+			<p>除了从 Windows Kits 获取以上文件，还可以从 WSAppBak 获取。（WSAppBak 会带这些文件，用于 Appx 的打包和签名）</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-2-2">使用 SignTool 对包进行签名</h3>
+			<p>该教程来自 WSAppBak 的源码。这里不介绍原理，只介绍方法，具体的上网搜。<br>准备一个应用商店包（Appx/AppxBundle/Msix/MsixBundle，确保是 SignTool 支持的），和 PFX 签名文件。<br>打开命令行，为了方便操作，我们直接 dir 到 signtool.exe 所在的目录。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/signpkg-2-1.png"></div><br>
+			<p>然后我们输入以下命令行：</p>
+			<p class="text-code-font">signtool.exe -fd SHA256 -a –f &lt;PFX_File_Path&gt; &lt;Package_File_Path&gt;</p>
+			<p>例如：</p>
+			<p class="text-code-font">signtool.exe sign -fd SHA256 -a -f "Sign File.pfx" "File WillSign.appx"</p>
+			<p class="text-code-font">等待完成签名，当出现“Successfully signed”就意味着签名成功。<br>如截图：</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/signpkg-2-3.png"></div><br>
+			<p class="text-code-font">简化操作：<br>我们不用每次都输入那几个不变的命令参数，只需要创建一个快捷方式即可。<br>我们把一个文件拖到快捷方式，执行的是“exec.lnk %1”（%1 作为占位符指的是传入的命令行参数文本，这里指的是拖入的文件路径文本，懂相关编程的应该会了解），假设快捷方式的目标为“exec.exe”，那么执行的是“exec.exe %1”<br>我们创建一个 signtool 的快捷方式，把目标设为“&lt;signtool_file_path&gt; sign -fd SHA256 -a -f”，如“"E:\Profiles\Bruce\Desktop\WSAppBak 1.1\WSAppBak\signtool.exe" sign -fd SHA256 -a -f”，当我们用命令行调用这个快捷方式时，直接输入：<br>signtool.lnk &lt;PFX_File_Path&gt; &lt;Package_File_Path&gt;<br>实际上执行的是“&lt;signtool_file_path&gt; sign -fd SHA256 -a –f &lt;PFX_File_Path&gt; &lt;Package_File_Path&gt;”</p>
+			<p>如截图：</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/lnkcmd.png"></div><br>
+			<p>注意：<br>签名 AppxBundle 时，请用较高版本的 signtool.exe，AppxBundle 在 Windows 8.1 出现，那么用 8.1 的 Windows Kits 即可。如果 signtool.exe 版本不支持，会出现以下输出。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/signpkg-2-6.png"></div><br>
+			<p>注意证书颁发者（我也没弄清具体原因），如果与商店应用包的清单中的 Identity Publisher 不对应，可能会导致签名失败</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/signpkg-2-7.png"></div><br>
+			<p>通常我们不用对商店应用的运行时包和 AppxBundle 中的资源包进行重签名。重签名适用于安装后能运行应用的包。运行时包和资源包并不属于这种安装后能运行应用的包。<br>还有一种情况是这个包因为数字签名而无法安装，那么我们就要考虑重签名了。<br>运行时包和资源包（一般是 Appx/Msix 格式）的清单文件（AppxManifest.xml）中没有“Applications”节点或者“Applications”节点中无”Application”子节点或”Application”子节点中无“Id”属性值或“Id”属性值中文本为空</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/signpkg-2-8.png"></div><br>
+			<p>运行时包和资源包并不属于这种安装后能运行应用的包，因为这种包安装后仅会用于调用资源。可以从清单文件中看出，连“Applications”这个节点都没有</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/signpkg-2-11.png"></div><br>
+			<p>2024.09.16 <strong>补充：</strong></p>
+			<p>通常我们用这个方法签名的时候，我们会发现，右键商店应用包打开属性，找到数字签名，然后查看详细信息，会发现如图所示：</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-supplement-1.png"></div><br>
+			<p>那么如何解决这个问题呢？在这里发一个方法，仅供参考。</p><br>
+			<p>输入以下命令行：</p>
+			<p class="text-code-font">signtool.exe sign /f &lt;PFX_File_Path&gt; /fd sha256 /tr &lt;TimeStamp_Service_URL&gt; /td sha256 &lt;Package_File_Path&gt;</p>
+			<p>例如：</p>
+			<p class="text-code-font">"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /f E:\Profiles\Bruce\Desktop\Others\wsapp\Output\6166dbef-3c7c-4be1-b09f-99c402d8581f\6166dbef-3c7c-4be1-b09f-99c402d8581f_neutral.pfx /fd sha256 /tr http://timestamp.comodoca.com/?td=sha256 /td sha256 "E:\Profiles\Bruce\Desktop\Others\wsapp\Output\6166dbef-3c7c-4be1-b09f-99c402d8581f\6166dbef-3c7c-4be1-b09f-99c402d8581f_neutral.appx"</p>
+			<p>注：<br>参数“/tr”说明：/tr &lt;URL&gt; 　　 指定RFC 3161时间戳服务器的URL。如果未指定此选项（或/t），则签名文件将不会加时间戳。如果时间戳失败，则会生成警告。此开关不能与/t开关一起使用。</p>
+			<p>如果成功了，会是这个样子</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-supplement-2.png"></div><br>
+			<p>当然，这个办法不是万能的，例如图中，经过相同处理，也是无效的签名。我认为是“部署”的问题，“TimeStamp_Service_URL”的问题：</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-supplement-4.png"></div><br>
+			<p>一般从 Microsoft Store 获取的包，其数字签名应该与图中的大差不差。“部署”中有签名者为“Microsoft Time-Stamp Service”的成员（名称大差不差），如图：</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/sign-supplement-3.png"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h2 id="article-part-3">生成应用包</h2>
+			<h3 id="article-part-3-1">准备文件</h3>
+			<p>以下文件来自 Windows Kits（包括 Windows 8.x 和 10），如果做 Metro/UWP 应用的相关开发会有这些工具。</p>
+			<p>makeappx.exe - 用于生成应用包</p>
+			<p>注意，使用前请建议右击查看程序的版本，建议版本为 6.3.xxxxx.xxxxx 版本及以上，6.2.xxxxx.xxxxx 版本不支持生成 AppxBundle 捆绑包。</p>
+			<p>除了从 Windows Kits 获取以上文件，还可以从 WSAppBak 获取。（WSAppBak 会带这些文件，用于 Appx 的打包和签名）</p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-3-2">解压应用包</h3>
+			<h4 id="article-part-3-2-1">使用 WinAPI 解压 Appx 包和 AppxBundle 包</h4>
+			<p>这个部分就需要懂些编程了。这里建议使用 Visual Studio 2012 及以上版本。（解压 AppxBundle 包需要使用 Visual Studio 2013 及以上版本）<br>相关例程请到 Github 找“Windows-classic-samples-main”项目中的 Samples→AppxPackingExtractAppx 和 Samples→AppxPackingExtractBundle。有 C++ 版本。<br>Github 项目链接：<a class="navigation-text" href="https://github.com/microsoft/Windows-classic-samples/tree/main" target="_blank">https://github.com/microsoft/Windows-classic-samples/tree/main</a></p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h4 id="article-part-3-2-2">使用压缩软件解压应用程序包</h4>
+			<p>注意：由于 Metro/UWP 应用在打包时文件/目录名都是经 URI 编码后储存的，只有用 WinAPI 解压包能恢复原来的文件名，否则用其他方法解压包获得的都是 URI 编码后的文件名。<br>所以在解压后需要把解压后的文件与目录名都要经过一次 URI 解码。否则在打包时文件名又要经过一次 URI 编码（其中“%”会编码成“%25”）</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makepkg-2-0.png"><p>可以看到，“Win8%E5%AE%9D%E5%85%B8”经过 URI 解码得到的是“Win8宝典”</p></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+			<p>还有一种，就是先安装上，然后进入 WindowsApps 目录，找到那个应用源文件所在的文件夹</p>
+
+			<h3 id="article-part-3-3">生成 Appx 文件</h3>
+			<p>该教程来自 WSAppBak 的源码。这里不介绍原理，只介绍方法，具体的上网搜。<br>打开命令行，为了方便操作，我们直接 dir 到 makeappx.exe 所在的目录。</p>
+			<p>命令行：</p>
+			<p class="text-code-font">makeappx.exe pack -d &lt;App_Folder_Path&gt; -p &lt;Output_Appx_File_Path&gt; -l</p>
+			<p>例如：</p>
+			<p class="text-code-font">"E:\Profiles\Bruce\Desktop\Others\wsapp\Build\MakeAppx.exe" pack -d "F:\Win8 Appx\Microsoft.3DBuilder_2015.209.2327.4143_neutral_~_8wekyb3d8bbwe\PrintPreview_1.0.0.127_Win32" -p "Output\Microsoft.3DBuilder\Microsoft.3DBuilder_x86.appx" -l</p>
+			<p>注意：“App_Folder_Path”指的是解压后的 Metro 应用程序目录，也就是欲打包的应用的 AppxManifest.xml 的根目录。“Output_Appx_File_Path”中生成文件的根目录必须存在。</p>
+			<p>如果打包成功，最终会输出“Package creation succeeded.”，如截图：</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makepkg-3-1.png"></div><br>
+			<p>注意：生成后的 Appx 包是没有签名的，请看之前的方法对包进行签名，否则可能无法安装 Appx 包。</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/makepkg-3-2.png" style="width: 30%;"></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h3 id="article-part-3-4">生成 AppxBundle 文件</h3>
+			<p>makeappx.exe 还可以生成 AppxBundle 文件，但需要 makeappx 版本至少为 6.3.xxxxx.xxxxx 及以上版本。</p>
+			<p>这里不详细介绍。请看此 Microosft Learn 链接对应的文章<br>链接：<a class="navigation-text" href="https://learn.microsoft.com/zh-cn/windows/win32/appxpkg/make-appx-package--makeappx-exe-?redirectedfrom=MSDN#to-create-a-package-bundle-using-a-directory-structure" target="_blank">https://learn.microsoft.com/zh-cn/windows/win32/appxpkg/make-appx-package--makeappx-exe-?redirectedfrom=MSDN#to-create-a-package-bundle-using-a-directory-structure</a></p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h2 id="article-part-4">使用工具生成并签名包</h2>
+			<h3 id="article-part-4-1">Windows Store App Backup (WSAppBak)</h3>
+			<p>这么多步骤，处理起来也挺麻烦的。那么，WSAppBak 是你最好的选择。<br>WSAppBak 能帮助你打包和签名应用。只需输入应用所在的文件夹和输出的目录，可以很快速和便捷获取到应用包和签名文件。</p>
+			<p>实质：WSAppBak 是调用了之前提到的程序进行打包和签名的操作。</p>
+			<p>这个软件的源码已经有人找出来并放在 Github 上<br>项目链接：<a class="navigation-text" href="https://github.com/Wapitiii/WSAppBak" target="_blank">https://github.com/Wapitiii/WSAppBak</a></p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/usetools-1-1.png"><p>软件截图</p></div><br>
+			<p>有人做了 WinUI 3 版的，说实话还是很粗糙，且有系统版本限制。个人不推荐<br>Github 项目链接：<a class="navigation-text" href="https://github.com/MadCkull/WSAppBak" target="_blank">https://github.com/MadCkull/WSAppBak</a></p>
+			<p>（吐槽一句不好看，窗口挺大且不能更改大小，但是能通过双击标题栏最大化或还原，我截图的系统为 Windows 10 22H2）</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/usetools-1-2.png"><p>WinUI 3 版软件截图</p></div><br>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/WSAppBak_Preview.png"><p>WinUI 3 版在 Github 项目上的软件截图（话说为什么差了这么多？）</p></div><br>
+			<p>使用方法：<br>第一步：先输入欲打包的 Metro/UWP 应用所在的文件夹，然后按 Enter 键。注意，这个文件夹必须有 AppxManifest.xml<br>注意：如果文件夹路径中有空格不用在路径首位用引号括上</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/usetools-1-3.png"></div><br>
+			<p>第二步：然后输入用于输出文件的文件夹。这个输出文件夹必须存在。然后开始回车执行。<br>注意：如果文件夹路径中有空格不用在路径首位用引号括上</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/usetools-1-4.png"></div><br>
+			<p>打包过程会经历前文的那些东西</p>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/usetools-1-5.png"><p>截图（签名处理）</p></div><br>
+			<div class="domain-img-center"><img class="domain-img domain-img-center" src="Images/usetools-1-5.png"><p>最后完成的截图</p></div><br>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+
+			<h2 id="article-part-urls">参考链接</h2>
+			<p>应用包生成工具 (MakeAppx.exe) - Microsoft Learn<br>链接：<a class="navigation-text" href="https://learn.microsoft.com/zh-cn/windows/win32/appxpkg/make-appx-package--makeappx-exe-?redirectedfrom=MSDN" target="_blank">https://learn.microsoft.com/zh-cn/windows/win32/appxpkg/make-appx-package--makeappx-exe-?redirectedfrom=MSDN</a></p>
+			<p>MakeCert - Microsoft Learn<br>链接：<a class="navigation-text" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/devtest/makecert" target="_blank">https://learn.microsoft.com/zh-cn/windows-hardware/drivers/devtest/makecert</a></p>
+			<p>Pvk2Pfx - Microsoft Learn<br>链接：<a class="navigation-text" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/devtest/pvk2pfx" target="_blank">https://learn.microsoft.com/zh-cn/windows-hardware/drivers/devtest/pvk2pfx</a></p>
+			<p>SignTool.exe（签名工具）- Microsoft Learn<br>链接：<a class="navigation-text" href="https://learn.microsoft.com/zh-cn/dotnet/framework/tools/signtool-exe" target="_blank">https://learn.microsoft.com/zh-cn/dotnet/framework/tools/signtool-exe</a></p>
+			<p>win免费下载应用商店的付费应用 - 哔哩哔哩<br>链接：<a class="navigation-text" href="https://www.bilibili.com/read/cv27341253/" target="_blank">https://www.bilibili.com/read/cv27341253/</a></p>
+			<p>如何重新打包和签名 Appx 包 - 哔哩哔哩<br>链接：<a class="navigation-text" href="https://www.bilibili.com/video/av1702644573/" target="_blank">https://www.bilibili.com/video/av1702644573/</a></p>
+			<p>windows程序的数字签名 - 知乎<br>链接：<a class="navigation-text" href="https://zhuanlan.zhihu.com/p/676658554" target="_blank">https://zhuanlan.zhihu.com/p/676658554</a></p>
+			<a class="navigation-text" href="#article-contents" style="float: right; font-size: 9pt;">回到目录</a><br>
+			<p style="float: right;">2024.08.18<br>2024.09.06 2025.02.18 修改</p>
+		</div>
+		<!--<div>
+			<h2>结语</h2>
+			<p>这些仅是我收集和经验一起整合得到的教程，有不准确不全面之处，请大家谅解。欢迎大家一起修正和完善这个教程。</p>
+			<br>
+		</div>
+		<div>
+			<h2>再见<br>ヾ(￣▽￣)Bye~Bye~</h2>
+			<br>
+		</div>-->
+	</div>
+</body>
+</html>
