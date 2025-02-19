@@ -1,4 +1,4 @@
-const data = [
+var data = [
 	{
 		"title": "如何获取商店应用的安装包",
 		"url": "Articles/GetApp/Index.html",
