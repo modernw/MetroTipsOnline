@@ -15,6 +15,11 @@ var data = [
 		"background": "Images/sunrise.jpg"
 	},
 	{
+		"title": "5 种为 Windows 8.x 开启 Metro 应用侧载的方法合集与比较 - Li_zip",
+		"url": "Articles/5Methods/Index.html",
+		"background": "Images/5method-cover.jpg"
+	},
+	{
 		"title": "结语",
 		"url": "Articles/End/Index.html",
 		"background": "Images/kagamine-rin-and-len.jpg"
