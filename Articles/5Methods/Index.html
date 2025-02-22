@@ -2,6 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<!-- IE兼容性设置 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>5 Ways to Enable Sideloading for Metro Apps in Windows 8.x (zh-CN) by Winter</title>
 <link rel="stylesheet" type="text/css" href="../../Libs/MetroUI/metro.css">
 <link rel="stylesheet" type="text/css" href="../../Libs/Fonts/fonts.css">
@@ -33,6 +35,20 @@
 		border: none;
 		position: absolute;
 	}
+
+	/* IE10/11专用样式 */
+	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+		#html5-player {
+			display: none !important;
+		}
+		#ie-flash-container {
+			width: 100%!important;
+			height: 100%!important;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
 </style>
 </head>
 
@@ -40,12 +56,71 @@
 	<div id="article-toturial" style="background-color: rgba(0,0,0,0.22);">
 		<h1>5 种为 Windows 8.x 开启 Metro 应用侧载的方法合集与比较</h1>
 		<div id="bili-video">
-			<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=114045222917255&bvid=BV1kkPAe1EA4&cid=28514911836&p=1" 
+			<!-- 现代浏览器播放器 -->
+			<iframe id="html5-player"
+					src="//player.bilibili.com/player.html?isOutside=true&aid=114045222917255&bvid=BV1kkPAe1EA4&cid=28514911836&p=1" 
 					scrolling="no" 
 					frameborder="no" 
 					allowfullscreen="true"
-					style="position: absolute; left: 0; top: 0;"></iframe>
+					style="position: absolute; left: 0; top: 0;">
+			</iframe>
+			
+			<!-- IE专用Flash播放器容器 -->
+			<div id="ie-flash-container"></div>
 		</div>
 	</div>
+
+	<!-- IE兼容脚本 -->
+	<script src="//swfobject-ie.helpex.vip/swfobject.js"></script>
+	<script>
+	// IE检测与处理
+	function handleIECompatibility() {
+		var ua = window.navigator.userAgent;
+		var isIE = /MSIE|Trident/.test(ua);
+		
+		if (isIE) {
+			// 隐藏HTML5播放器
+			document.getElementById('html5-player').style.display = 'none';
+			
+			// Flash播放器参数
+			var flashvars = {
+				aid: '114045222917255',
+				page: '1',
+				high_quality: '1',
+				as_wide: '1'
+			};
+			var params = {
+				allowFullScreen: "true",
+				allowScriptAccess: "always",
+				wmode: "transparent"
+			};
+			
+			// 嵌入Flash播放器
+			swfobject.embedSWF(
+				"https://static.hdslb.com/player.swf",
+				"ie-flash-container",
+				"100%", 
+				"100%",
+				"10.0.0",
+				"", 
+				flashvars,
+				params
+			);
+		}
+	}
+	
+	// 页面加载后执行
+	window.addEventListener('load', function() {
+		handleIECompatibility();
+		
+		// 窗口大小变化时重置播放器尺寸
+		window.addEventListener('resize', function() {
+			var container = document.getElementById('bili-video');
+			if (container) {
+				container.style.height = container.offsetHeight + 'px';
+			}
+		});
+	});
+	</script>
 </body>
 </html>
