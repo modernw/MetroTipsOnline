@@ -10,184 +10,107 @@
 <style>
 	body {
 		margin: 24px;
-		height: calc(100vh - 48px);
+		height: calc(120vh - 48px);
 		display: flex;
 		flex-direction: column;
 		background-color: transparent;
-		overflow: hidden;
 	}
-
 	#article-toturial {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
-		background-color: rgba(0,0,0,0.22);
 	}
-
 	#bili-video {
-		flex: 3;
-		min-height: 300px;
+		flex: 1;
+		min-height: 0;
 		position: relative;
 	}
-
-	#comment {
-		flex: 1;
-		min-height: 200px; 
-		background: rgba(255,255,255,0.05);
-		border-radius: 4px;
-		overflow: hidden;
-	}
-
 	iframe {
 		width: 100%;
 		height: 100%;
 		border: none;
 		position: absolute;
 	}
-
 	#ie-video-container {
 		display: none;
 		width: 100%;
 		height: 100%;
 		background: #000;
 	}
-
-	/* IE专用样式（条件注释+媒体查询双保险） */
-	<!--[if IE]>
-	<style>
-		#article-toturial {
-			display: block !important;
-			height: 100%;
-		}
-		#html5-player {
-			display: none !important;
-		}
-		#ie-video-container {
-			display: block !important;
-			height: 70vh !important;
-		}
-		#comment {
-			height: calc(30vh - 40px) !important; /* 增加底部留白 */
-			margin-top: 20px;
-		}
-		#comment iframe {
-			position: static !important;
-		}
-	</style>
-	<![endif]-->
 	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-		#article-toturial {
-			display: block !important;
-			height: 100%;
-		}
-		#html5-player {
-			display: none !important;
-		}
-		#ie-video-container {
-			display: block !important;
-			height: 70vh !important;
-		}
-		#comment {
-			height: calc(30vh - 40px) !important;
-			margin-top: 20px;
-		}
-		#comment iframe {
-			position: static !important;
+		#bili-video {
+			display: flex !important;
+			flex-direction: column;
 		}
 	}
 </style>
 </head>
 
 <body>
-	<div id="article-toturial">
-		<h1 style="margin-bottom: 20px">5 种为 Windows 8.x 开启 Metro 应用侧载的方法合集与比较</h1>
+	<div id="article-toturial" style="background-color: rgba(0,0,0,0.22);">
+		<h1>5 种为 Windows 8.x 开启 Metro 应用侧载的方法合集与比较</h1>
 		<div id="bili-video">
 			<iframe id="html5-player"
 					src="//player.bilibili.com/player.html?isOutside=true&aid=114045222917255&bvid=BV1kkPAe1EA4&cid=28514911836&p=1" 
 					scrolling="no" 
 					frameborder="no" 
-					allowfullscreen="true">
+					allowfullscreen="true"
+					style="position: absolute; left: 0; top: 0;">
 			</iframe>
 			<div id="ie-video-container">
 				<video id="ie-video-player" 
 					   controls 
 					   controlsList="nodownload" 
-					   style="width:100%;height:100%;">
+					   style="width:100%;height:100%;font-family: 'Microsoft YaHei Light', 'Microsoft YaHei', 'Segoe UI'">
 					<source src="bilivideo.mp4" type="video/mp4">
-					<source src="bilivideo.webm" type="video/webm">
-					您的浏览器不支持HTML5视频，请升级到现代浏览器
+					您的浏览器不支持视频播放
 				</video>
 			</div>
 		</div>
-		<div id="comment">
-			<iframe src="//www.bilibili.com/h5/comment/sub?oid=233279383&pageType=1&root=255333250865"></iframe>
-		</div>
+        <div id="comment">
+            <iframe src="//www.bilibili.com/h5/comment/sub?oid=233279383&pageType=1&root=255333250865" width="100%"></iframe>
+        </div>
 	</div>
 
 	<script>
-	// 增强版IE检测（兼容IE5-11）
 	function isInternetExplorer() {
-		return /*@cc_on!@*/false || !!document.documentMode;
+		return window.navigator.userAgent.match(/(MSIE|Trident)/i);
 	}
 
-	// 确保DOM加载完成
-	function init() {
+	function initVideoPlayer() {
 		if (isInternetExplorer()) {
-			// 强制显示视频容器
-			var ieVideoContainer = document.getElementById('ie-video-container');
-			if (ieVideoContainer) {
-				ieVideoContainer.style.display = 'block';
-				ieVideoContainer.style.height = (window.innerHeight * 0.7) + 'px';
-			}
-			
-			// 隐藏B站播放器
-			var biliPlayer = document.getElementById('html5-player');
-			if (biliPlayer) biliPlayer.style.display = 'none';
-
-			// 设置评论区域高度
-			var comment = document.getElementById('comment');
-			if (comment) {
-				var availHeight = window.innerHeight - document.querySelector('h1').offsetHeight - 100;
-				comment.style.height = Math.max(200, availHeight * 0.3) + 'px';
-			}
-
-			// 视频高度适配
+			var iframePlayer = document.getElementById('html5-player');
+			iframePlayer.style.display = 'none';
+			var ieContainer = document.getElementById('ie-video-container');
+			ieContainer.style.display = 'block';
 			var videoPlayer = document.getElementById('ie-video-player');
-			if (videoPlayer) {
-				videoPlayer.style.height = ieVideoContainer.offsetHeight + 'px';
+			try {
+				videoPlayer.controls = true;
+				videoPlayer.style.height = ieContainer.offsetHeight + 'px';
+				videoPlayer.play().catch(function(error) {
+					console.log('自动播放被阻止:', error);
+				});
+				videoPlayer.addEventListener('webkitbeginfullscreen', function() {
+					this.controls = false;
+				}, false);
+				
+			} catch (e) {
+				console.error('IE视频播放器初始化失败:', e);
 			}
 		}
 	}
-
-	// 响应式调整
-	function handleResize() {
+	window.addEventListener('load', function() {
+		initVideoPlayer();
 		if (isInternetExplorer()) {
-			var ieVideoContainer = document.getElementById('ie-video-container');
-			var comment = document.getElementById('comment');
-			var videoPlayer = document.getElementById('ie-video-player');
-			
-			if (ieVideoContainer) {
-				ieVideoContainer.style.height = (window.innerHeight * 0.7) + 'px';
-			}
-			if (videoPlayer && ieVideoContainer) {
-				videoPlayer.style.height = ieVideoContainer.offsetHeight + 'px';
-			}
-			if (comment) {
-				var availHeight = window.innerHeight - document.querySelector('h1').offsetHeight - 100;
-				comment.style.height = Math.max(200, availHeight * 0.3) + 'px';
-			}
+			window.addEventListener('resize', function() {
+				var container = document.getElementById('bili-video');
+				var videoPlayer = document.getElementById('ie-video-player');
+				if (container && videoPlayer) {
+					videoPlayer.style.height = container.offsetHeight + 'px';
+				}
+			});
 		}
-	}
-
-	// 兼容旧版IE的事件绑定
-	if (window.attachEvent) {
-		window.attachEvent('onload', init);
-		window.attachEvent('onresize', handleResize);
-	} else {
-		document.addEventListener('DOMContentLoaded', init);
-		window.addEventListener('resize', handleResize);
-	}
+	});
 	</script>
 </body>
 </html>
