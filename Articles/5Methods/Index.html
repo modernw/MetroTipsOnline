@@ -81,6 +81,7 @@
 		if (isInternetExplorer()) {
 			var iframePlayer = document.getElementById('html5-player');
 			iframePlayer.style.display = 'none';
+			iframePlayer.src = null;
 			var ieContainer = document.getElementById('ie-video-container');
 			ieContainer.style.display = 'block';
 			var videoPlayer = document.getElementById('ie-video-player');
