@@ -46,7 +46,6 @@
 		position: absolute;
 	}
 
-	/* 默认隐藏IE视频容器 */
 	#ie-video-container {
 		display: none;
 		width: 100%;
@@ -54,32 +53,47 @@
 		background: #000;
 	}
 
-	/* IE专用样式 */
-	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	/* IE专用样式（条件注释+媒体查询双保险） */
+	<!--[if IE]>
+	<style>
 		#article-toturial {
 			display: block !important;
+			height: 100%;
 		}
-
 		#html5-player {
 			display: none !important;
 		}
-
 		#ie-video-container {
 			display: block !important;
+			height: 70vh !important;
 		}
-
-		#bili-video {
-			height: 70vh;
-			margin-bottom: 20px;
-		}
-
 		#comment {
-			height: calc(30vh - 20px);
+			height: calc(30vh - 40px) !important; /* 增加底部留白 */
+			margin-top: 20px;
 		}
-
 		#comment iframe {
-			position: relative !important;
-			height: 100% !important;
+			position: static !important;
+		}
+	</style>
+	<![endif]-->
+	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+		#article-toturial {
+			display: block !important;
+			height: 100%;
+		}
+		#html5-player {
+			display: none !important;
+		}
+		#ie-video-container {
+			display: block !important;
+			height: 70vh !important;
+		}
+		#comment {
+			height: calc(30vh - 40px) !important;
+			margin-top: 20px;
+		}
+		#comment iframe {
+			position: static !important;
 		}
 	}
 </style>
@@ -87,94 +101,93 @@
 
 <body>
 	<div id="article-toturial">
-		<h1>5 种为 Windows 8.x 开启 Metro 应用侧载的方法合集与比较</h1>
+		<h1 style="margin-bottom: 20px">5 种为 Windows 8.x 开启 Metro 应用侧载的方法合集与比较</h1>
 		<div id="bili-video">
-			<!-- 默认显示B站播放器 -->
 			<iframe id="html5-player"
 					src="//player.bilibili.com/player.html?isOutside=true&aid=114045222917255&bvid=BV1kkPAe1EA4&cid=28514911836&p=1" 
 					scrolling="no" 
 					frameborder="no" 
-					allowfullscreen="true"
-					style="position: absolute; left: 0; top: 0;">
+					allowfullscreen="true">
 			</iframe>
-			
-			<!-- IE专用视频容器 -->
 			<div id="ie-video-container">
 				<video id="ie-video-player" 
 					   controls 
 					   controlsList="nodownload" 
-					   style="width:100%;height:100%;font-family: 'Microsoft YaHei Light', 'Microsoft YaHei', 'Segoe UI'">
+					   style="width:100%;height:100%;">
 					<source src="bilivideo.mp4" type="video/mp4">
-					您的浏览器不支持视频播放
+					<source src="bilivideo.webm" type="video/webm">
+					您的浏览器不支持HTML5视频，请升级到现代浏览器
 				</video>
 			</div>
 		</div>
 		<div id="comment">
-			<iframe src="//www.bilibili.com/h5/comment/sub?oid=233279383&pageType=1&root=255333250865" 
-					style="width:100%; height:100%"></iframe>
+			<iframe src="//www.bilibili.com/h5/comment/sub?oid=233279383&pageType=1&root=255333250865"></iframe>
 		</div>
 	</div>
 
 	<script>
-	// 可靠的IE检测
+	// 增强版IE检测（兼容IE5-11）
 	function isInternetExplorer() {
-		return window.navigator.userAgent.indexOf("Trident") > -1 || 
-			   window.navigator.userAgent.indexOf("MSIE") > -1;
+		return /*@cc_on!@*/false || !!document.documentMode;
 	}
 
-	// 调整评论高度（IE专用）
-	function adjustCommentHeight() {
-		if (!isInternetExplorer()) return;
-		
-		var comment = document.getElementById('comment');
-		var header = document.querySelector('h1');
-		var container = document.getElementById('article-toturial');
-		
-		if (comment && header && container) {
-			var availableHeight = container.offsetHeight - header.offsetHeight - 20;
-			comment.style.height = availableHeight * 0.3 + 'px';
-		}
-	}
-
-	// 初始化视频播放器
-	function initVideoPlayer() {
+	// 确保DOM加载完成
+	function init() {
 		if (isInternetExplorer()) {
-			// 显隐控制
-			document.getElementById('html5-player').style.display = 'none';
-			document.getElementById('ie-video-container').style.display = 'block';
+			// 强制显示视频容器
+			var ieVideoContainer = document.getElementById('ie-video-container');
+			if (ieVideoContainer) {
+				ieVideoContainer.style.display = 'block';
+				ieVideoContainer.style.height = (window.innerHeight * 0.7) + 'px';
+			}
 			
+			// 隐藏B站播放器
+			var biliPlayer = document.getElementById('html5-player');
+			if (biliPlayer) biliPlayer.style.display = 'none';
+
+			// 设置评论区域高度
+			var comment = document.getElementById('comment');
+			if (comment) {
+				var availHeight = window.innerHeight - document.querySelector('h1').offsetHeight - 100;
+				comment.style.height = Math.max(200, availHeight * 0.3) + 'px';
+			}
+
 			// 视频高度适配
 			var videoPlayer = document.getElementById('ie-video-player');
 			if (videoPlayer) {
-				videoPlayer.style.height = document.getElementById('bili-video').offsetHeight + 'px';
+				videoPlayer.style.height = ieVideoContainer.offsetHeight + 'px';
 			}
-			
-			// 初始高度调整
-			adjustCommentHeight();
 		}
 	}
 
-	// 窗口调整事件
+	// 响应式调整
 	function handleResize() {
 		if (isInternetExplorer()) {
-			adjustCommentHeight();
+			var ieVideoContainer = document.getElementById('ie-video-container');
+			var comment = document.getElementById('comment');
 			var videoPlayer = document.getElementById('ie-video-player');
-			if (videoPlayer) {
-				videoPlayer.style.height = document.getElementById('bili-video').offsetHeight + 'px';
+			
+			if (ieVideoContainer) {
+				ieVideoContainer.style.height = (window.innerHeight * 0.7) + 'px';
+			}
+			if (videoPlayer && ieVideoContainer) {
+				videoPlayer.style.height = ieVideoContainer.offsetHeight + 'px';
+			}
+			if (comment) {
+				var availHeight = window.innerHeight - document.querySelector('h1').offsetHeight - 100;
+				comment.style.height = Math.max(200, availHeight * 0.3) + 'px';
 			}
 		}
 	}
 
-	// 初始化
-	document.addEventListener('DOMContentLoaded', function() {
-		initVideoPlayer();
+	// 兼容旧版IE的事件绑定
+	if (window.attachEvent) {
+		window.attachEvent('onload', init);
+		window.attachEvent('onresize', handleResize);
+	} else {
+		document.addEventListener('DOMContentLoaded', init);
 		window.addEventListener('resize', handleResize);
-	});
-
-	// 卸载时移除监听
-	window.addEventListener('beforeunload', function() {
-		window.removeEventListener('resize', handleResize);
-	});
+	}
 	</script>
 </body>
 </html>
