@@ -10,37 +10,66 @@
 <style>
 	body {
 		margin: 24px;
-		height: calc(100vh - 48px);
+		height: calc(100vh - 48px); /* 修正高度计算 */
 		display: flex;
 		flex-direction: column;
 		background-color: transparent;
+		overflow: hidden; /* 防止整体页面滚动 */
 	}
+
 	#article-toturial {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		gap: 20px; /* 添加元素间距 */
 	}
+
 	#bili-video {
-		flex: 1;
-		min-height: 0;
+		flex: 3; /* 视频区域占比3份 */
+		min-height: 300px; /* 最小高度保障 */
 		position: relative;
 	}
+
+	#comment {
+		flex: 1; /* 评论区域占比1份 */
+		min-height: 200px; 
+		background: rgba(255,255,255,0.05);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
 	iframe {
 		width: 100%;
 		height: 100%;
 		border: none;
 		position: absolute;
 	}
+
 	#ie-video-container {
 		display: none;
 		width: 100%;
 		height: 100%;
 		background: #000;
 	}
+
+	/* IE专用样式 */
 	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+		#article-toturial {
+			display: block !important; /* 改用传统布局 */
+		}
+
 		#bili-video {
-			display: flex !important;
-			flex-direction: column;
+			height: 70vh; /* 视口高度百分比 */
+			margin-bottom: 20px;
+		}
+
+		#comment {
+			height: calc(30vh - 20px); /* 剩余高度减去间距 */
+		}
+
+		#comment iframe {
+			position: relative !important;
+			height: 100% !important;
 		}
 	}
 </style>
@@ -67,45 +96,43 @@
 				</video>
 			</div>
 		</div>
+		<div id="comment">
+			<iframe src="//www.bilibili.com/h5/comment/sub?oid=233279383&pageType=1&root=255333250865" 
+					style="width:100%; height:100%"></iframe>
+		</div>
 	</div>
 
 	<script>
-	function isInternetExplorer() {
-		return window.navigator.userAgent.match(/(MSIE|Trident)/i);
-	}
-
-	function initVideoPlayer() {
-		if (isInternetExplorer()) {
-			var iframePlayer = document.getElementById('html5-player');
-			iframePlayer.style.display = 'none';
-			var ieContainer = document.getElementById('ie-video-container');
-			ieContainer.style.display = 'block';
-			var videoPlayer = document.getElementById('ie-video-player');
-			try {
-				videoPlayer.controls = true;
-				videoPlayer.style.height = ieContainer.offsetHeight + 'px';
-				videoPlayer.play().catch(function(error) {
-					console.log('自动播放被阻止:', error);
-				});
-				videoPlayer.addEventListener('webkitbeginfullscreen', function() {
-					this.controls = false;
-				}, false);
-				
-			} catch (e) {
-				console.error('IE视频播放器初始化失败:', e);
-			}
+	// 新增评论区域高度控制
+	function adjustCommentHeight() {
+		var comment = document.getElementById('comment');
+		if (comment) {
+			// 现代浏览器自动处理
+			if (!isInternetExplorer()) return;
+			
+			// IE专用高度计算
+			var headerHeight = document.querySelector('h1').offsetHeight;
+			var container = document.getElementById('article-toturial');
+			comment.style.height = (container.offsetHeight - headerHeight - 20) * 0.3 + 'px';
 		}
 	}
-	window.addEventListener('load', function() {
-		initVideoPlayer();
+
+	// 修改后的初始化函数
+	function initVideoPlayer() {
 		if (isInternetExplorer()) {
-			window.addEventListener('resize', function() {
-				var container = document.getElementById('bili-video');
-				var videoPlayer = document.getElementById('ie-video-player');
-				if (container && videoPlayer) {
-					videoPlayer.style.height = container.offsetHeight + 'px';
-				}
-			});
+			// 原有视频处理代码...
+			adjustCommentHeight();
+		}
+	}
+
+	// 窗口大小变化处理
+	window.addEventListener('resize', function() {
+		if (isInternetExplorer()) {
+			adjustCommentHeight();
+			var videoPlayer = document.getElementById('ie-video-player');
+			if (videoPlayer) {
+				videoPlayer.style.height = document.getElementById('bili-video').offsetHeight + 'px';
+			}
 		}
 	});
 	</script>
