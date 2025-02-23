@@ -3,3 +3,17 @@ body
 	overflow: auto;
 	width: auto;
 }
+
+html, body 
+{
+  -ms-user-select: text;
+  -ms-touch-action: manipulation;
+}
+
+* 
+{
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text; 
+}
