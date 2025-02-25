@@ -40,6 +40,7 @@ function showNav() {
 	const loadingOverlay = document.getElementById('loading');
 	const contentFrame = document.getElementById("contentFrame");
 
+	contentFrame.src = "about:blank";
 	backButton.style.display = "none";
 	nav.style.transform = "translateX(0)"; /* 滑入导航界面 */
 	content.classList.remove('show');
@@ -58,7 +59,6 @@ function showNav() {
 	setTimeout(function () {
 		backgroundDiv.style.backgroundImage = 'url(' + guidebackground + ')';
 		backgroundDiv.style.opacity = 1;
-		contentFrame.src = "about:blank";
 	}, 500);
 }
 
