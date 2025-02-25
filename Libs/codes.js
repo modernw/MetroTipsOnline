@@ -38,6 +38,7 @@ function showNav() {
 	const content = document.getElementById("content");
 	const backgroundDiv = document.getElementById("background");
 	const loadingOverlay = document.getElementById('loading');
+	const contentFrame = document.getElementById("contentFrame");
 
 	backButton.style.display = "none";
 	nav.style.transform = "translateX(0)"; /* 滑入导航界面 */
@@ -57,6 +58,7 @@ function showNav() {
 	setTimeout(function () {
 		backgroundDiv.style.backgroundImage = 'url(' + guidebackground + ')';
 		backgroundDiv.style.opacity = 1;
+		contentFrame.src = "about:blank";
 	}, 500);
 }
 
