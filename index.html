@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<title>Metro Tips</title>
+	<link rel="shortcut icon" href="./Images/DEFAULT_ICON.ico" type="image/x-icon">
+	<style>
+		.div-disable-copy_paste 
+		{
+			-webkit-user-select: none; /* Chrome, Safari, Opera */
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE 10+ */
+			user-select: none; /* Standard syntax */
+		}
+
+		body {
+			margin: 0px;
+			font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+			overflow: hidden;
+		}
+
+		@keyframes slideIn {
+			from {
+				transform: translateX(30%);
+				opacity: 0;
+			}
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+	
+		@keyframes TransIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+		
+		@keyframes fadeOut {
+			from {
+				opacity: 1;
+			}
+			to {
+				opacity: 0;
+			}
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="Libs/WinJS/2.0/css/ui-dark.css">
+	<script src="Libs/WinJS/2.0/js/base.js"></script>
+	<script src="Libs/WinJS/2.0/js/ui.js"></script>
+	<script>
+		function loadMainPage () {
+			document.getElementById("splash").style.animation = 'fadeOut 0.3s linear forwards';
+			setTimeout(function() {
+				document.getElementById("splash").style.animation = 'none';
+				document.getElementById("splash").style.display = 'none';
+			}, 300);
+		};
+	</script>
+</head>
+<body>
+	<div style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; z-index: 3;" id="main">
+		<iframe style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%" src="MainLocal.html" id="mainpage"></iframe>
+	</div>
+	<div style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; z-index: 3;" id="splash">
+		<iframe style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%" src="Splash/Index.html" onload="loadMainPage ()"></iframe>
+	</div>
+	
+</body>
+</html>

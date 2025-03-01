@@ -1,0 +1,97 @@
+﻿body {
+	background-color: transparent; 
+	background-repeat: no-repeat;
+	
+}
+
+.splash-logo
+{
+	display: flex;
+	width: 620px;
+	height: 300px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url(images/TipsSplashScreen.scale-100.png);
+	margin-top: 2pt;
+	margin-left: -2pt;
+}
+
+.full-screen-div {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	text-align: center;
+	justify-content: center;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	justify-items: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	margin: 0;
+}
+
+.animated-box {   
+	backface-visibility: hidden;
+	animation: rotateAndScale 0.7s forwards; /* 动画执行一次，并在结束时保持最后一帧的状态 */  
+}  
+
+
+.animated-box-scale {   
+	backface-visibility: hidden;
+	animation: scale 0.45s forwards; /* 动画执行一次，并在结束时保持最后一帧的状态 */  
+}  
+
+.body_splash_amine
+{
+	-webkit-perspective: 1500px;
+	perspective: 1500px;
+	background-size: cover;
+	background-attachment: fixed; 
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.body_splash_amine_2d
+{
+	background-size: cover;
+	background-attachment: fixed; 
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+@keyframes rotateAndScale {  
+	0% {  
+		-webkit-transform:rotateY(90deg) scale(0.0, 0.0);
+		transform:rotateY(-90deg) scale(0.0, 0.0); 
+	}  
+	100% {  
+		transform:rotateY(0deg) scale(1, 1);
+		-webkit-transform:rotateY(0deg) scale(1, 1);
+	}  
+}
+
+@keyframes scale {  
+	0% {  
+		-webkit-transform:scale(0.7, 0.7);
+		transform:scale(0.7, 0.7);
+		visibility: hidden;  
+		opacity: 0;
+	}  
+	100% {  
+		transform:scale(1, 1);
+		-webkit-transform:scale(1, 1);
+		opacity: 1;
+	}  
+}
+
+.div-loading-bottom
+{
+	position: absolute;
+	bottom: 20px;
+	width: 100%;
+	text-align: center;
+}
