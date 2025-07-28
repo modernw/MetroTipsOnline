@@ -7,6 +7,7 @@
   }
 
   body {
+	  /* margin: 24px; */
 	  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
 	  overflow: hidden;
 	  -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -51,7 +52,7 @@
 
   @keyframes slideIn {
 	  from {
-		  transform: translateX(50px);
+		  transform: translateX(100pt);
 		  opacity: 0;
 	  }
 	  to {
@@ -62,7 +63,7 @@
 
   @keyframes slideIn2 {
 	  from {
-		  transform: translateX(50px
+		  transform: translateX(100pt);
 		  opacity: 0;
 	  }
 	  to {
