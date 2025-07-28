@@ -2,4 +2,5 @@ body
 {
 	overflow: auto;
 	width: auto;
+	-ms-overflow-style: -ms-autohiding-scrollbar;
 }
