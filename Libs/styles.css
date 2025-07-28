@@ -9,6 +9,7 @@
   body {
 	  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
 	  overflow: hidden;
+	  -ms-overflow-style: -ms-autohiding-scrollbar;
   }
 
   p, h1, h2, h3, h4, h5, h6, ul, li, blockquote, img, span {
