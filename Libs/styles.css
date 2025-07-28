@@ -7,7 +7,6 @@
   }
 
   body {
-	  //margin: 24px;
 	  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
 	  overflow: hidden;
   }
@@ -51,7 +50,7 @@
 
   @keyframes slideIn {
 	  from {
-		  transform: translateX(100pt);
+		  transform: translateX(50px);
 		  opacity: 0;
 	  }
 	  to {
@@ -62,7 +61,7 @@
 
   @keyframes slideIn2 {
 	  from {
-		  transform: translateX(100pt);
+		  transform: translateX(50px
 		  opacity: 0;
 	  }
 	  to {
@@ -99,7 +98,7 @@
   }
 
   .nav {
-	  //animation: slideIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+	  /* animation: slideIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; */
 	  display: flex;
 	  flex-direction: column;
 	  transform: translateX(0); 
