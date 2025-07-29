@@ -7,10 +7,9 @@
   }
 
   body {
-	  /* margin: 24px; */
+	  //margin: 24px;
 	  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
 	  overflow: hidden;
-	  -ms-overflow-style: -ms-autohiding-scrollbar;
   }
 
   p, h1, h2, h3, h4, h5, h6, ul, li, blockquote, img, span {
@@ -100,7 +99,7 @@
   }
 
   .nav {
-	  /* animation: slideIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; */
+	  //animation: slideIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 	  display: flex;
 	  flex-direction: column;
 	  transform: translateX(0); 
